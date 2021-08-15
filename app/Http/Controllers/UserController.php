@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -14,7 +16,9 @@ class UserController extends Controller
     public function index()
     {
         
-    
+        $active_users = User::whereNull('soft_deleted_at')->get();
+
+        return view('user.list', compact('active_users'));
     }
 
     /**
@@ -36,7 +40,22 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
+        $user_data = $request->except('_token');
+
+        $user_data['name'] = $user_data['name'].' '.$user_data['surname'];
+        
+        $user_data['password'] = Hash::make($user_data['password']);
+
+        try {
+    
+            $new_user = User::create($user_data);
+        } catch (\Exception $e) {
+            
+            return response()->json($e->getMessage(), 500);
+        }
+
+        return response()->json($new_user, 200);
     }
 
     /**
@@ -81,6 +100,16 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        
+        try {
+            
+            $user = User::find($id)->delete();
+
+        } catch (\Exception $e) {
+            
+            return response()->json($e->getMessage(), 500);
+        }
+
+        return response()->json(['deleted' => 'Usuário deletado com sucesso!'], 200);
     }
 }

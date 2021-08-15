@@ -13,11 +13,15 @@ use Illuminate\Support\Facades\Route;
  */
 Route::prefix('/usuarios')->name('usuario.')->group(function () {
     
-    Route::get('/cadastro', UserController::class, 'create')->name('create');
-    Route::post('/store', UserController::class, 'store')->name('store');
+    Route::get('/', 'UserController@index')->name('index');
+    Route::get('/cadastro', 'UserController@create')->name('create');
+    Route::post('/store', 'UserController@store')->name('store');
+    Route::put('/update', 'UserController@update')->name('update');
+    Route::delete('/delete/{id}', 'UserController@destroy')->name('destroy');
 });
 
 Route::get('/', function () {
-    return view('welcome');
+    
+    return redirect()->route('usuario.index');
 });
 

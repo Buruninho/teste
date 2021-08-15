@@ -1,0 +1,21 @@
+
+#table-wrapper{
+    
+    width: 100%;
+    height: 100%;
+    padding: 50px;
+}
+
+#user-table{
+
+    width: 100%; 
+    background-color: white;
+}
+
+#submit-user-form{
+
+    border-radius: 4px;
+    padding: 5px 13px;
+    background-color: #43963d;
+    color: white;
+}
