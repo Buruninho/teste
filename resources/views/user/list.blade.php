@@ -30,7 +30,7 @@
                         <td scope="col">{{ $user->username }}</td>
                         <td scope="col">{{ $user->name }}</td>
                         <td scope="col">
-                            <button class="btn btn-primary" type="button" id="edit-button" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar este usuário"><i class="fa fa-edit"></i></button>
+                            <button class="btn btn-primary" type="button" id="edit-button" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar este usuário" onclick="editUser({{ $user->id }})"><i class="fa fa-edit"></i></button>
                             <button class="btn btn-danger" type="button" id="delete-button" data-bs-toggle="tooltip" data-bs-placement="top" title="Deletar este usuário" onclick="deleteUser({{ $user->id }})"><i class="fa fa-trash"></i></button>
                         </td>
                     </tr>

@@ -3,7 +3,11 @@ var user_table;
 $(document).ready(function () {
     
     $.extend($.fn.dataTable.defaults, {
-    
+        
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ],
         responsive: true,
         "language": {
             "search": "Procurar:",
@@ -138,4 +142,9 @@ function deleteUser(user_id) {
         );
       }
     });
+}
+
+function editUser(id_user){
+
+
 }
