@@ -1,5 +1,4 @@
 var user_table;
-// testing new branch test
 
 $(document).ready(function () {
     
