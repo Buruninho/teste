@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -19,17 +20,6 @@ class UserController extends Controller
         $active_users = User::whereNull('soft_deleted_at')->get();
 
         return view('user.list', compact('active_users'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        
-        return view('user.create');
     }
 
     /**
@@ -59,17 +49,6 @@ class UserController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
@@ -77,7 +56,16 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
+        
+        try {
+            
+            $user = User::find($id);
+        } catch (\Exception $e) {
+            
+            return response()->json(['userNotFound' => 'Usuário não foi encontrado'], 500);
+        }
+
+        return response()->json($user, 200);
     }
 
     /**
@@ -89,7 +77,21 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        
+        $user_new_data = $request->except('_token');
+
+        try {
+            
+            $user = User::find($id);
+            $user->update($user_new_data);
+            $user->save();
+
+            return response()->json(['updateSuccess' => 'Dados do usuário atualizados com sucesso!'], 200);
+
+        } catch (Exception $e) {
+            
+            return response()->json(['updateError' => 'Não foi possivel atualizar dados deste usuário.'], 500);
+        }
     }
 
     /**

@@ -32,7 +32,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                <button type="submit" form="user-form" id="submit-user-form">Cadastrar</button>
+                <button type="submit" form="user-form" class="submit-button" id="submit-user-form">Cadastrar</button>
             </div>
         </div>
     </div>

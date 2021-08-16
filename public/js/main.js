@@ -69,7 +69,7 @@ $('#user-form').submit(function (e) {
                         '<td scope="col">'+response.username+'</td>' +
                         '<td scope="col">'+response.name+'</td>' +
                         '<td scope="col">' +
-                            '<button class="btn btn-primary" type="button" id="edit-button" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar este usuário"><i class="fa fa-edit"></i></button>'+
+                            '<button class="btn btn-primary" type="button" id="edit-button" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar este usuário" onclick="editUser('+response.id+')"><i class="fa fa-edit"></i></button>'+
                             '<button class="btn btn-danger" type="button" id="delete-button" data-bs-toggle="tooltip" data-bs-placement="top" title="Deletar este usuário" onclick="deleteUser('+response.id+')"><i class="fa fa-trash"></i></button>'+
                         '</td>' +
                     '</tr>'
@@ -81,10 +81,7 @@ $('#user-form').submit(function (e) {
                 $('#username').val('');
                 $('#password').val('');
             });
-            
-            
-            
-    
+        
         }, error: function(jqXHR, exception){
 
             Swal.fire({
@@ -128,6 +125,14 @@ function deleteUser(user_id) {
                 $('#user-table').DataTable().destroy();
                 $('#row-'+user_id).remove();
                 $('#user-table').DataTable().draw();
+            },error: function(jqXHR, exception){
+
+                Swal.fire({
+    
+                    title: 'Ocorreu um erro ao deletar este usuário.',
+                    text: 'Perdoe o ocorrido. Tente novamente mais tarde.',
+                    icon: 'error',
+                });
             }
         });
 
@@ -144,7 +149,67 @@ function deleteUser(user_id) {
     });
 }
 
+var user_id_update;
 function editUser(id_user){
 
+    user_id_update = id_user;
+    $.ajax({
+        type: "GET",
+        url: "usuarios/edit/"+id_user,
+        headers:{
+            'X-CSRF-TOKEN': $('#edit-user-form > input[name="_token"]').val(),
+        },
+        dataType: "JSON",
+        success: function (response) {
+            
+            $('#user-name-modal-title').text(response.username);
+            $('#edit-name').val(response.name);
+            $('#edit-username').val(response.username);
+            
+            $('#edit-user-modal').modal('show');
+        }, error: function(jqXHR, exception){
+
+            Swal.fire({
+
+                title: 'Ocorreu um erro durante a busca por este usuário.',
+                text: 'Perdoe o ocorrido. Tente novamente mais tarde.',
+                icon: 'error',
+            });
+
+        }
+    });
 
 }
+
+$('#edit-user-form').submit(function (e) { 
+    e.preventDefault();
+    
+    $.ajax({
+        type: "PUT",
+        url: "/usuarios/update/"+user_id_update,
+        data: $(this).serializeArray(),
+        dataType: "JSON",
+        success: function (response) {
+            
+            $('#edit-user-modal').modal('hide');
+
+            Swal.fire({
+                title: 'Dados do usuário cadastrados com sucesso',
+                icon: 'success',
+            });
+
+            $('#user-table').DataTable().destroy();
+            $('#row-'+user_id_update+' > .name-col').text($('#edit-name').val());
+            $('#row-'+user_id_update+' > .username-col').text($('#edit-username').val());
+            $('#user-table').DataTable().draw();
+        },error: function(jqXHR, exception){
+
+            Swal.fire({
+
+                title: 'Ocorreu um erro durante a atualização do usuário.',
+                text: 'Perdoe o ocorrido. Tente novamente mais tarde.',
+                icon: 'error',
+            });
+        }
+    });
+});

@@ -16,7 +16,8 @@ Route::prefix('/usuarios')->name('usuario.')->group(function () {
     Route::get('/', 'UserController@index')->name('index');
     Route::get('/cadastro', 'UserController@create')->name('create');
     Route::post('/store', 'UserController@store')->name('store');
-    Route::put('/update', 'UserController@update')->name('update');
+    Route::get('/edit/{id}', 'UserController@edit')->name('edit');
+    Route::put('/update/{id}', 'UserController@update')->name('update');
     Route::delete('/delete/{id}', 'UserController@destroy')->name('destroy');
 });
 
